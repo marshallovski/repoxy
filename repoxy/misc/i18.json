@@ -27,7 +27,9 @@
         "delete": "Delete",
         "mngpost": "Manage post",
         "delpostok": "Successfully deleted post!",
-        "chlangok": "Successfully changed language!"
+        "chlangok": "Successfully changed language!",
+        "poweredby": "Powered by Repoxy",
+        "ossengine": "blog engine with open source code"
     },
     "ru": {
         "adminpanel": "Панель блога",
@@ -57,7 +59,9 @@
         "delete": "Удалить",
         "mngpost": "Упр. постом",
         "delpostok": "Пост успешно удалён!",
-        "chlangok": "Язык успешно сменён."
+        "chlangok": "Язык успешно сменён.",
+        "poweredby": "Этот блог работает на Repoxy",
+        "ossengine": "движок блога с открытым кодом"
     },
     "uk": {
         "adminpanel": "Панель блогу",
@@ -87,6 +91,8 @@
         "delete": "Видалити",
         "mngpost": "Кер. дописом",
         "delpostok": "Допис успішно видалено!",
-        "chlangok": "Мова успішно змінена."
+        "chlangok": "Мова успішно змінена.",
+        "poweredby": "Цей блог працює на Repoxy",
+        "ossengine": "двигуна з відкритим кодом"
     }
 }

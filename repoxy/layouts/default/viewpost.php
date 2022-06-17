@@ -21,10 +21,11 @@ if (!$mysqli) {
 
 if (isset($_GET['post'])) {
     try {
-        $result = $mysqli->query('SELECT postname from posts WHERE postid = ' . htmlspecialchars($_GET['post'], ENT_QUOTES, 'UTF-8'));
+        $result = $mysqli->query('SELECT postname, postcontent from posts WHERE postid = ' . htmlspecialchars($_GET['post'], ENT_QUOTES, 'UTF-8'));
         $row = $result->fetch_assoc();
         if ($result->num_rows > 0) {
             $postname = $row['postname'];
+            $postcont = $row['postcontent'];
         } else {
             $postname = '404';
             return header('Location: /404.html');
@@ -53,20 +54,18 @@ if (isset($_GET['post'])) {
     <link rel="stylesheet" href="/repoxy/layouts/default/css/buttons.css">
     <link rel="icon" href="/repoxy/layouts/default/assets/logo.png" type="image/png">
 
-    <meta name="title" content="<?= $blog['name'] ?>">
-    <meta name="description" content="<?= $blog['desc'] ?>">
+    <meta name="title" content="<?= $blog['name'] ?> - <?= $postname ?>">
+    <meta name="description" content="<?= $postcont ?>">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="<?= $url ?>">
-    <meta property="og:title" content="<?= $blog['name'] ?>">
-    <meta property="og:description" content="<?= $blog['desc'] ?>">
-    <meta property="og:image" content="<?= $url ?>repoxy/layouts/default/assets/logo.png">
+    <meta property="og:title" content="<?= $blog['name'] ?> - <?= $postname ?>">
+    <meta property="og:description" content="<?= $postcont ?>">
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="<?= $url ?>">
-    <meta property="twitter:title" content="<?= $blog['name'] ?>">
-    <meta property="twitter:description" content="<?= $blog['desc'] ?>">
-    <meta property="twitter:image" content="<?= $url ?>repoxy/layouts/default/assets/logo.png">
+    <meta property="twitter:title" content="<?= $blog['name'] ?> - <?= $postname ?>">
+    <meta property="twitter:description" content="<?= $postcont ?>">
     <meta name="generator" content="Repoxy <?= $rpxycfg['version'] ?>" />
 
 </head>

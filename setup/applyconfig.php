@@ -31,7 +31,7 @@ $dbcfg = [
         'dbname' => $_GET['dbname'],
         'server' => $_GET['dbhost']
     ],
-    'repoxy' => ['installed' => 'true', 'version' => '0.0.3'] // please don't touch 'version'
+    'repoxy' => ['installed' => 'true', 'version' => '0.0.4'] // please don't touch 'version'
 ];
 
 try {

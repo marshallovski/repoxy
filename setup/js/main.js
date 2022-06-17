@@ -45,7 +45,7 @@ $('id', 'installBtn').onclick = function () {
     dbhost: `${$('id', 'opt_bldbhost').value}:${$('id', 'opt_bldbport').value}`
   };
 
-  window.fetch(`/setup/applyconfig.php?installed=true&blayout=${cfg.layout}&bname=${cfg.blname || 'My Blog'}&bauthor=${cfg.blauthor || 'John Doe'}&blauthorpsw=${cfg.blauthorpsw}&bdesc=${cfg.bldesc || 'This is my blog!'}&bemail=${cfg.blemail || 'none'}&btw=${cfg.bltw || 'none'}&bfb=${cfg.blfb || 'none'}&brt=${cfg.blrt || 'none'}&bds=${cfg.blds || 'none'}&installDate=${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}&dbpsw=${cfg.dbpsw}&dbname=${cfg.dbname}&dbuser=${cfg.dbuser}&dbhost=${cfg.dbhost}`, {
+  window.fetch(`/setup/applyconfig.php?installed=true&blayout=${cfg.layout}&bname=${cfg.blname || 'My Blog'}&bauthor=${cfg.blauthor || 'John Doe'}&blauthorpsw=${cfg.blauthorpsw}&bdesc=${cfg.bldesc || 'This is my blog!'}&bemail=${cfg.blemail || ''}&btw=${cfg.bltw || ''}&bfb=${cfg.blfb || ''}&brt=${cfg.blrt || ''}&bds=${cfg.blds || ''}&installDate=${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}&dbpsw=${cfg.dbpsw}&dbname=${cfg.dbname}&dbuser=${cfg.dbuser}&dbhost=${cfg.dbhost}`, {
     method: 'POST'
   }).then(res => res.json())
     .then(res => {

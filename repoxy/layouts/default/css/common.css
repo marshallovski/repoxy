@@ -1,0 +1,27 @@
+.common-container {
+    background-color: #1b1b1b;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: fixed;
+    width: 500px;
+    padding: 8px;
+    box-shadow: 0 0 8px #000;
+    border-radius: 16px;
+}
+
+p {
+    margin-top: 1em;
+}
+
+.blogdesc {
+    margin-top: 0;
+    margin-bottom: 3em;
+}
+
+.subheading,
+.sublink {
+    color: #555;
+    font-size: 12px;
+}

@@ -116,6 +116,7 @@ if (!$mysqli) {
             echo '</div>';
             ?>
         </div>
+        <?= round(memory_get_usage(true) / 1000000, 3) ?>
     </main>
     <script src="/repoxy/layouts/default/js/descCut.js"></script>
 </body>

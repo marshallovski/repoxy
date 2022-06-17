@@ -6,3 +6,6 @@ Disallow: /setup.php
 Disallow: /setup/
 Disallow: /admlogin/
 Disallow: /admpanel/
+Allow: /
+Allow: /about
+Allow: /contacts
