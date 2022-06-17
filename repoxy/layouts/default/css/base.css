@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/repoxy/layouts/default/fonts/OpenSans.ttf');
+    font-display: swap;
+}
+
+body {
+    background-color: #212121;
+    color: #eee;
+    font-family: 'Open Sans', sans-serif;
+    text-rendering: optimizeLegibility;
+}
+
+a {
+    text-decoration: none;
+    color: dodgerblue;
+}
+
+details,
+summary,
+input,
+button,
+textarea {
+    font-family: 'Open Sans', sans-serif;
+}

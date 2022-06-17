@@ -1,0 +1,184 @@
+.loginform {
+    display: block;
+    margin: auto;
+    width: 400px;
+    margin-top: 5em;
+    background-color: #333;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 2px 0 10px #000;
+    text-align: center;
+}
+
+input {
+    border: 0;
+    outline: 0;
+    padding: 5px 8px;
+    background-color: #ccc;
+    color: #333;
+    border-radius: 5px;
+}
+
+input:invalid {
+    border: 1.5px solid red;
+}
+
+label {
+    margin-right: 2em;
+    font-size: 18px;
+}
+
+.error {
+    background-color: #ef5350;
+    color: #000;
+    padding: 6px;
+    margin-bottom: 2em;
+    border-radius: 16px;
+}
+
+.adminpanel {
+    text-align: center;
+}
+
+header {
+    text-align: left;
+    margin-left: 3em;
+    border-bottom: 1px solid #fff;
+    width: 90%;
+}
+
+.blogname {
+    margin-left: 1em;
+    display: inline;
+}
+
+ul {
+    list-style: none;
+}
+
+.header_links {
+    display: inline-block;
+    vertical-align: 10%;
+}
+
+li {
+    display: inline;
+}
+
+.link_active {
+    color: #fff !important;
+    margin-left: 3em !important;
+}
+
+.header_link {
+    margin-left: 1em;
+    cursor: pointer;
+    color: #ccc;
+}
+
+details {
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    padding: .5em .5em 0;
+    margin: 1em;
+    width: auto;
+}
+
+summary {
+    font-weight: bold;
+    margin: -.5em -.5em 0;
+    padding: .5em;
+    cursor: pointer;
+}
+
+details[open] {
+    padding: .5em;
+}
+
+details[open] summary {
+    border-bottom: 1px solid #aaa;
+    margin-bottom: .5em;
+}
+
+.loginform_large {
+    width: 780px;
+}
+
+.ck-content {
+    color: #000;
+}
+
+.post_preview {
+    margin: 0 auto;
+    width: 300px;
+    font-size: 12px;
+    margin-bottom: 2em;
+}
+
+.post_preview_postcontent {
+    width: 350px;
+    height: 270px;
+    border-radius: 5px;
+    border: 1px solid #555;
+}
+
+
+
+/* Adaptive */
+@media only screen and (max-width: 800px) {
+    header {
+        width: 100%;
+        margin: 0;
+        text-align: center;
+    }
+
+    .blogname {
+        margin: 0;
+    }
+
+    .link_active {
+        margin: 0 !important;
+    }
+
+    .header_link {
+        margin: 10px !important;
+        font-size: 14px;
+    }
+
+    .btns {
+        text-align: center;
+    }
+
+    .loginform {
+        width: 330px;
+        padding: 5px;
+    }
+
+    .post_preview_postcontent {
+        width: 300px;
+        height: 200px;
+        margin-left: 0;
+        padding-left: 0;
+    }
+
+    summary,
+    details {
+        padding: 0 !important;
+        margin: 5px;
+    }
+
+    details[open] {
+        padding: 0;
+    }
+
+    .loginform,
+    .loginform_large {
+        width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+    }
+}
+
+.postname_inp {
+    text-align: center;
+}

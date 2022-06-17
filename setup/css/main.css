@@ -1,0 +1,115 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/setup/assets/Roboto-Regular.ttf');
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  background-color: #ccc;
+  color: #222;
+  font-family: 'Roboto', sans-serif;
+}
+
+main {
+  padding: 1em;
+  text-align: center;
+}
+
+.subheading {
+  color: #555;
+  font-size: 12px;
+}
+
+.logo {
+  width: 200px;
+}
+
+button,
+input,
+textarea {
+  outline: none;
+  font-family: 'Roboto', sans-serif;
+}
+
+button {
+  border: 0;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-red {
+  background-color: #ff6e6c;
+  color: #1f1235;
+}
+
+.btn-green {
+  background-color: #078080;
+  color: #dbdbdb;
+}
+
+.btns {
+  margin-top: 2em;
+}
+
+#inst_cfg {
+  display: none;
+  margin-left: 1em;
+}
+
+.layoutname {
+  cursor: pointer;
+}
+
+.options {
+  text-align: left;
+  margin-top: 3em;
+}
+
+.option_heading {
+  margin-top: 1em;
+}
+
+input,
+textarea {
+  font-family: 'Roboto', sans-serif;
+  border: 1px solid gray;
+  border-radius: 5px;
+  width: 200px;
+  padding: 5px;
+  margin-left: 10px;
+  background-color: #eee
+}
+
+input:focus,
+textarea:focus {
+  border: 1px solid #333;
+}
+
+.bldesc_text {
+  width: 500px;
+  height: 250px;
+}
+
+@media only screen and (max-width: 800px) {
+  .bldesc_text {
+    width: 300px;
+    height: 350px;
+  }
+
+  #inst_cfg {
+    margin-left: 0;
+  }
+
+  input,
+  textarea {
+    margin-left: 0;
+  }
+}
