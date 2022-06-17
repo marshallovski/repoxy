@@ -14,3 +14,6 @@ Repoxy - lightweight blog engine written with **PHP+MySQL** (MariaDB supported t
 1. PHP ?.?+ (tested on PHP **8.1.6**) with INI, mysqli, JSON exts. (on Windows I'm recommend latest **XAMPP**)
 2. **MariaDB/MySQL**
 3. Any old PC with free **64MB of RAM** (more posts -> more RAM will be eated by MySQL)
+
+# Installing
+Just open setup.php in your browser.
