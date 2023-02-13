@@ -1,0 +1,16 @@
+/* text styles for ckeditor */
+.text-huge {
+    font-size: 1.8em;
+}
+
+.text-big {
+    font-size: 1.4em;
+}
+
+.text-small {
+    font-size: .85em;
+}
+
+.text-tiny {
+    font-size: .7em;
+}

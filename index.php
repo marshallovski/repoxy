@@ -1,16 +1,7 @@
 <?php
-function loadmodule($libname)
-{
-  if (file_exists("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/{$libname}.php")) {
-    require_once("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/{$libname}.php");
-  } else {
-    echo '<br>Failed load module: ' . $libname;
-  }
-}
-
-// loading modules
-loadmodule('layout');
+require_once("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/layout.php");
+$blogcfg = parse_ini_file("{$_SERVER['DOCUMENT_ROOT']}/repoxy/misc/blog_config.ini");
 
 // loading default page
 $lt = new Layout();
-$lt->loadpage('home', 'default'); // loading page "home" from layout "default" (layouts will be in /repoxy/layouts/)
+$lt->loadpage('home', base64_decode($blogcfg['layout'])); // loading page "home" (layouts will be in /repoxy/layouts/)

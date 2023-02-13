@@ -46,11 +46,12 @@ li {
     line-height: 1.0;
     color: #fff;
     margin-bottom: 3px;
+    font-size: 28px;
 }
 
 .post_subheading {
     color: #9c9999;
-    font-size: 13px;
+    font-size: 12px;
 }
 
 /* Post heading (post name, post author and when post is created) */
@@ -59,10 +60,15 @@ li {
 }
 
 .post_text {
-    font-size: 14px;
+    font-size: 13.5px;
     color: #eee;
+    font-family: 'Open Sans', sans-serif;
 }
 
+.zeroposts_msg {
+    text-align: center;
+    margin-top: 2em;
+}
 
 /* Adaptive */
 @media only screen and (max-width: 800px) {
@@ -110,8 +116,8 @@ li {
     }
 }
 
-.paglinks {
-    font-size: 24px;
+.pagelinks {
+    font-size: 22px;
     display: block;
     margin: auto;
     text-align: center;

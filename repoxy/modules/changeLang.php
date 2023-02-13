@@ -1,13 +1,14 @@
 <?php
 require_once("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/sendjson.php");
-$rpxycfg = parse_ini_file("{$_SERVER['DOCUMENT_ROOT']}/repoxy/misc/repoxy.ini");
+require_once("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/updateini.php");
+$blogcfg = "{$_SERVER['DOCUMENT_ROOT']}/repoxy/misc/blog_config.ini";
 
 session_start();
-
+//checks if admin's data is valid
 if (isset($_GET['lang']) && isset($_SESSION['username']) && isset($_SESSION['userpsw'])) {
-    $_SESSION['lang'] = $_GET['lang'];
+    update_ini_file($blogcfg, "lang", base64_encode($_GET['lang']));
     echo sendjson(["msg" => "OK"]);
 } else {
-    http_response_code(500);
-    echo sendjson(["msg" => "Not allowed to change language."]);
+    http_response_code(403);
+    echo sendjson(["msg" => "Not allowed"]);
 }

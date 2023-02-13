@@ -29,7 +29,14 @@
         "delpostok": "Successfully deleted post!",
         "chlangok": "Successfully changed language!",
         "poweredby": "Powered by Repoxy",
-        "ossengine": "blog engine with open source code"
+        "ossengine": "open source blog engine",
+        "crednotmatch": "These credentials don't match our records",
+        "username": "Username",
+        "psw": "Password",
+        "login": "Login",
+        "admpanellogin": "Login to the admin panel",
+        "tohomepage": "Back to home page",
+        "logout": "Logout"
     },
     "ru": {
         "adminpanel": "Панель блога",
@@ -61,9 +68,16 @@
         "delpostok": "Пост успешно удалён!",
         "chlangok": "Язык успешно сменён.",
         "poweredby": "Этот блог работает на Repoxy",
-        "ossengine": "движок блога с открытым кодом"
+        "ossengine": "движок блога с открытым кодом",
+        "crednotmatch": "Неправильный логин или пароль",
+        "username": "Никнейм",
+        "psw": "Пароль",
+        "login": "Вход",
+        "admpanellogin": "Войти в админ панель",
+        "tohomepage": "На главную страницу",
+        "logout": "Выйти из аккаунта"
     },
-    "uk": {
+    "ukr": {
         "adminpanel": "Панель блогу",
         "homepage": "Гол. сторінка",
         "addpost": "Додати пост",
@@ -80,19 +94,26 @@
         "contreading": "Читати далі",
         "about": "Про блог",
         "contacts": "Контакти",
-        "zeroposts": "0 дописів",
+        "zeroposts": "0 постів",
         "by": "від",
         "at": "на",
-        "successaddpost": "Публікацію додано!",
+        "successaddpost": "Пост додано!",
         "err": "Помилка",
         "toolong": "Занадто довгий вміст публікації! (Макс. символів - 4000)",
-        "editpostok": "Допис успішно оновлено!",
+        "editpostok": "Пост успішно оновлено!",
         "selpage": "Виберіть сторінку:",
         "delete": "Видалити",
-        "mngpost": "Кер. дописом",
-        "delpostok": "Допис успішно видалено!",
+        "mngpost": "Кер. постом",
+        "delpostok": "Пост успішно видалено!",
         "chlangok": "Мова успішно змінена.",
         "poweredby": "Цей блог працює на Repoxy",
-        "ossengine": "двигуна з відкритим кодом"
+        "ossengine": "двигуна блогу з відкритим кодом",
+        "crednotmatch": "Невірний логін чи пароль",
+        "login": "Вхід",
+        "username": "Нікнейм",
+        "psw": "Пароль",
+        "admpanellogin": "Увійти в адмін панель",
+        "tohomepage": "На головну сторінку",
+        "logout": "Вийти з акаунту"
     }
 }

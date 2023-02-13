@@ -7,7 +7,6 @@
     position: fixed;
     width: 500px;
     padding: 8px;
-    box-shadow: 0 0 8px #000;
     border-radius: 16px;
 }
 
@@ -24,4 +23,11 @@ p {
 .sublink {
     color: #555;
     font-size: 12px;
+}
+
+@media only screen and (max-width: 768px) {
+    .common-container {
+        width: 350px;
+        border-radius: 10px;
+    }
 }

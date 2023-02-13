@@ -1,20 +1,18 @@
 <?php
-require("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/mlog.php");
+require_once("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/mlog.php");
 
-/**
- * @name Layout Manager
- * @description Checks for layout and loads it
- * @path /repoxy/modules/layout.php
- */
 class Layout
 {
-  // available pages: home, viewpost, admpanel, admlogin
+  // available pages depends on your template (layout)
   function loadpage(string $page, string $layout)
   {
-    if (file_exists("{$_SERVER['DOCUMENT_ROOT']}/repoxy/layouts/{$layout}/{$page}.php")) {
-      include("{$_SERVER['DOCUMENT_ROOT']}/repoxy/layouts/{$layout}/{$page}.php");
+    $toLoad = "{$_SERVER['DOCUMENT_ROOT']}/repoxy/layouts/{$layout}/{$page}.php";
+
+    if (file_exists($toLoad)) {
+      include($toLoad);
     } else {
-      mlog("<strong>Page/layout not found:</strong> loading page\"{$page}\" from layout \"{$layout}\".");
+      http_response_code(500);
+      mlog("<strong>Page/layout not found:</strong> loading page \"{$page}\" from layout \"{$layout}\".");
     }
   }
 }

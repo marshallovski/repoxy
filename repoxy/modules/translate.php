@@ -1,16 +1,11 @@
 <?php
-function i18(string $token, string $lang)
+function i18n(string $token)
 {
+    $blogcfg = "{$_SERVER['DOCUMENT_ROOT']}/repoxy/misc/blog_config.ini";
     $stringsFile = file_get_contents("{$_SERVER['DOCUMENT_ROOT']}/repoxy/misc/i18.json");
-    $jsontr = json_decode($stringsFile, true);
+    $strings = json_decode($stringsFile, true);
+    $lang = base64_decode(parse_ini_file($blogcfg)['lang']);
 
-    if (isset($_SESSION['lang']) && $lang === 'sess') {
-        return $jsontr[$_SESSION['lang']][$token];
-    } else if (!isset($_SESSION['lang'])) {
-        $autolang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-        return $jsontr[$autolang][$token];
-    } else {
-        return $jsontr[$lang][$token];
-    }
+    return $strings[$lang][$token] ?? $token;
 }
 

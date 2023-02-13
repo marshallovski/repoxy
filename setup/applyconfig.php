@@ -1,70 +1,112 @@
 <?php
-require_once("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/writeini.php");
-require_once("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/updateini.php");
-require_once("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/sendjson.php");
+require("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/writeini.php");
+require("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/updateini.php");
+require("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/sendjson.php");
+require("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/sanitize.php");
 
 $configFile = "{$_SERVER['DOCUMENT_ROOT']}/repoxy/misc/blog_config.ini";
 $rpxyConfig = "{$_SERVER['DOCUMENT_ROOT']}/repoxy/misc/repoxy.ini";
 
 $cfg = [
     "blog" => [
-        "name" => $_GET['bname'],
-        "desc" => $_GET['bdesc'],
-        "author" => $_GET['bauthor'],
-        "layout" => $_GET['blayout'],
-        "authorpsw" => $_GET['blauthorpsw'],
-        "creation" => $_GET['installDate']
+        "name" => base64_encode($_GET['bname']),
+        "desc" => base64_encode($_GET['bdesc']),
+        "author" => base64_encode($_GET['bauthor']),
+        "layout" => base64_encode($_GET['blayout']),
+        "authorpsw" => base64_encode($_GET['blauthorpsw']),
+        "creation" => base64_encode($_GET['installDate']),
+        "lang" => base64_encode($_GET['blang'])
     ],
     "contacts" => [
-        "email" => $_GET['bemail'],
-        "twitter" => $_GET['btw'],
-        "facebook" => $_GET['bfb'],
-        "reddit" => $_GET['brt'],
-        "discord" => $_GET['bds']
+        "email" => base64_encode($_GET['bemail']),
+        "twitter" => base64_encode($_GET['btw']),
+        "facebook" => base64_encode($_GET['bfb']),
+        "reddit" => base64_encode($_GET['brt']),
+        "discord" => base64_encode($_GET['bds'])
     ]
 ];
 
 $dbcfg = [
     "repoxydb" => [
-        'psw' => $_GET['dbpsw'],
-        'user' => $_GET['dbuser'],
-        'dbname' => $_GET['dbname'],
-        'server' => $_GET['dbhost']
+        'psw' => base64_encode($_GET['dbpsw']),
+        'user' => base64_encode($_GET['dbuser']),
+        'dbname' => base64_encode($_GET['dbname']),
+        'server' => base64_encode($_GET['dbhost'])
     ],
-    'repoxy' => ['installed' => 'true', 'version' => '0.0.4'] // please don't touch 'version'
+    // please don't touch line below, and not add "by Design". original author is marshallovski.
+    // github: https://github.com/marshallovski/repoxy/
+    'repoxy' => ['installed' => 'true', 'version' => '1.0']
 ];
 
+
 try {
-    // writing to config (/repoxy/misc/blog_config.ini)
-    write_ini_file($cfg, $configFile, true);
+    $mysqli = new mysqli(base64_decode($dbcfg['repoxydb']['server']), base64_decode($dbcfg['repoxydb']['user']), base64_decode($dbcfg['repoxydb']['psw']));
 
-    // tells Repoxy what it's properly installed & configured
-    write_ini_file($dbcfg, $rpxyConfig, true);
-
-    $mysqli = new mysqli(parse_ini_file($rpxyConfig)['server'], parse_ini_file($rpxyConfig)['user'], parse_ini_file($rpxyConfig)['psw'], parse_ini_file($rpxyConfig)['dbname']);
-    $query = "CREATE TABLE `posts` (
-      `postid` int(6) UNSIGNED NOT NULL,
-      `postname` varchar(48) NOT NULL,
-      `postcontent` varchar(4000) NOT NULL,
-      `postcreatedAt` varchar(30) NOT NULL
-    )";
-
-    $mysqli->query($query);
-    $mysqli->close(); // closing connection to DB
-
+    // i think i'm need to place this code everywhere else
     if (!$mysqli) {
         http_response_code(500);
-        echo sendjson(["msg" => "Could not connect to DB: {$mysqli->connect_error}. {$mysqli->error}"]);
-    } else {
-        // responding in JSON and notifying client what installing is complete
-        $data = ["msg" => "OK"];
-        header('Content-Type: application/json; charset=utf-8;');
-        http_response_code(200);
-        echo json_encode($data);
+        echo sendjson(["msg" => "Couldn't connect to database: {$mysqli->connect_error}. {$mysqli->error}"]);
     }
+
+    // https://github.com/marshallovski/repoxy/issues/1
+
+    // @FIX: this is NOT a SQL injection. the code below just creates a database. 
+    // i checked it, and if we creating a new database named "DROP DATABASE `test`" 
+    // the code below simply creates a new database named "drop database test".
+    // MUST be fixed in (( near )) future
+    $mysqli->real_query(sanitize(mysqli_real_escape_string($mysqli, "CREATE DATABASE IF NOT EXISTS `" . base64_decode($dbcfg['repoxydb']['dbname']) . "`")));
+
+    // select our database to create table for posts
+    // @TODO: use "template string" instead of "`". $var . "`"
+    $mysqli->real_query(sanitize(mysqli_real_escape_string($mysqli, "USE `" . base64_decode($dbcfg['repoxydb']['dbname']) . "`")));
+
+    // creating a table for posts
+    $query = "CREATE TABLE IF NOT EXISTS `posts` (
+        `postid` int(6) UNSIGNED NOT NULL,
+        `postname` varchar(48) NOT NULL,
+        `postcontent` varchar(4000) NOT NULL,
+        `postcreated` varchar(30) NOT NULL 
+      )";
+
+    // writing config to config file (/repoxy/misc/blog_config.ini)
+    write_ini_file($cfg, $configFile, true);
+
+    // tells Repoxy it's properly installed & configured (@TODO: should remove this, it's never used)
+    write_ini_file($dbcfg, $rpxyConfig, true);
+
+    $mysqli->query($query);
+
+    // removing all posts
+    if (isset($_GET['resetdb']) && $_GET['resetdb'] === 'true')
+        $mysqli->query("DELETE FROM `posts`;");
+
+    $mysqli->close(); // closing connection to DB
+
+    // deleting setup folder
+    // @FIX: this deletes only files, not folders
+    // code from https://intecsols.com/delete-files-and-folders-from-a-folder-using-php-by-intecsols/
+    if (isset($_GET['deleteSetup']) && $_GET['deleteSetup'] === 'true') {
+        $folder = '../setup';
+
+        // Get a list of all of the file names in the folder.
+        $files = glob("{$folder}/*");
+
+        // Loop through the file list.
+        foreach ($files as $file) {
+            // Make sure that this is a file and not a directory.
+            if (is_file($file)) {
+                // Use the unlink function to delete the file.
+                unlink($file);
+            }
+        }
+
+        // rmdir('../setup'); // doesn't works
+    }
+
+    // notifying client installing is complete
+    http_response_code(200);
+    echo sendjson(["msg" => "OK"]);
 } catch (\Throwable $th) {
     http_response_code(500);
-    header('Content-Type: application/json; charset=utf-8;');
-    $errdata = ["msg" => "Error: {$th->getMessage()}"];
-    echo json_encode($errdata);
+    echo sendjson(["msg" => "Error: {$th->getMessage()}"]);
 }

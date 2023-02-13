@@ -1,71 +1,70 @@
 <?php
-$blog = parse_ini_file("{$_SERVER['DOCUMENT_ROOT']}/repoxy/misc/blog_config.ini");
+$blog    = parse_ini_file("{$_SERVER['DOCUMENT_ROOT']}/repoxy/misc/blog_config.ini");
 $rpxycfg = parse_ini_file("{$_SERVER['DOCUMENT_ROOT']}/repoxy/misc/repoxy.ini");
-require_once("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/translate.php");
+require("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/translate.php");
+require("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/sanitize.php");
+require("{$_SERVER['DOCUMENT_ROOT']}/repoxy/modules/httptohttps.php");
 
 header('X-XSS-Protection "1; mode=block"');
 
-if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
-    $url = "https://";
-else
-    $url = "http://";
+httptohttps();
 
-$url .= $_SERVER['HTTP_HOST'];
-$url .= $_SERVER['REQUEST_URI'];
+$mysqli = new mysqli(
+    base64_decode($rpxycfg['server']),
+    base64_decode($rpxycfg['user']),
+    base64_decode($rpxycfg['psw']),
+    base64_decode($rpxycfg['dbname'])
+);
 
-$mysqli = new mysqli($rpxycfg['server'], $rpxycfg['user'], $rpxycfg['psw'], $rpxycfg['dbname']);
+if (!$mysqli)
+    die("Could not connect to DB: {$mysqli->connect_error}");
 
-if (!$mysqli) {
-    die("Could not connect to DB: " . $mysqli->connect_error);
-}
-
-if (isset($_GET['post'])) {
+if (isset($_GET['id'])) {
     try {
-        $result = $mysqli->query('SELECT postname, postcontent from posts WHERE postid = ' . htmlspecialchars($_GET['post'], ENT_QUOTES, 'UTF-8'));
-        $row = $result->fetch_assoc();
+        $result = $mysqli->query("SELECT * from `posts` WHERE `postid` = " . sanitize($_GET['id']));
+        $row    = $result->fetch_assoc();
+
         if ($result->num_rows > 0) {
-            $postname = $row['postname'];
-            $postcont = $row['postcontent'];
+            $postname    = $row['postname'];
+            $postcontent = [
+                'full' => $row['postcontent'],
+                'shortnohtml' => substr(strip_tags($row['postcontent']), 0, 400)
+            ];
         } else {
             $postname = '404';
             return header('Location: /404.html');
         }
-    } catch (\Throwable $th) {
-        $postname = '404';
-        return die('404');
+    } catch (Throwable) {
+        $postname = 'Internal Error';
+        return header('Location: /404.html');
     }
-}
+} else header('Location: /404.html');
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="<?= base64_decode($blog['lang']) ?>">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>
-        <?= $blog['name'] ?> - <?= $postname ? $postname : '404' ?>
+    <?= $postname ?> - <?= base64_decode($blog['name']) ?>
     </title>
     <link rel="stylesheet" href="/repoxy/layouts/default/css/base.css">
     <link rel="stylesheet" href="/repoxy/layouts/default/css/home.css">
 
-    <!-- Buttons -->
+    <link rel="stylesheet" href="/repoxy/layouts/default/css/textStyles.css">
     <link rel="stylesheet" href="/repoxy/layouts/default/css/buttons.css">
     <link rel="icon" href="/repoxy/layouts/default/assets/logo.png" type="image/png">
 
-    <meta name="title" content="<?= $blog['name'] ?> - <?= $postname ?>">
-    <meta name="description" content="<?= $postcont ?>">
+    <meta name="title" content="<?= $postname ?> - <?= base64_decode($blog['name']) ?>">
+    <meta name="description" content="<?= $postcontent['shortnohtml'] ?>">
 
     <meta property="og:type" content="website">
-    <meta property="og:url" content="<?= $url ?>">
-    <meta property="og:title" content="<?= $blog['name'] ?> - <?= $postname ?>">
-    <meta property="og:description" content="<?= $postcont ?>">
-
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="<?= $url ?>">
-    <meta property="twitter:title" content="<?= $blog['name'] ?> - <?= $postname ?>">
-    <meta property="twitter:description" content="<?= $postcont ?>">
+    <meta property="og:title" content="<?= $postname ?> - <?= base64_decode($blog['name']) ?>">
+    <meta property="og:description" content="<?= $postcontent['shortnohtml'] ?>">
+    <meta property="og:image" content="/repoxy/layouts/default/assets/logo.png">
     <meta name="generator" content="Repoxy <?= $rpxycfg['version'] ?>" />
 
 </head>
@@ -73,45 +72,64 @@ if (isset($_GET['post'])) {
 <body>
     <main>
         <header>
-            <h1 class="blogname"><?= $blog['name'] ?></h1>
+            <h1 class="blogname"><?= base64_decode($blog['name']) ?></h1>
             <div class="header_links">
                 <ul>
                     <a href="/">
-                        <li class="header_link link_active"><?= i18('homepage', 'sess') ?></li>
+                        <li class="header_link link_active"><?= i18n('homepage') ?></li>
                     </a>
                     <a href="/about">
-                        <li class="header_link"><?= i18('about', 'sess') ?></li>
+                        <li class="header_link"><?= i18n('about') ?></li>
                     </a>
                     <a href="/contacts">
-                        <li class="header_link"><?= i18('contacts', 'sess') ?></li>
+                        <li class="header_link"><?= i18n('contacts') ?></li>
                     </a>
-                    <?php if (isset($_SESSION['userpsw']) && isset($_SESSION['username'])) : ?>
-                        <a href="/admpanel">
-                            <li class="header_link"><?= i18('adminpanel', 'sess') ?></li>
-                        </a>
+                    <?php
+                    if (isset($_SESSION['userpsw']) && isset($_SESSION['username'])): ?>
+                                                    <a href="/admpanel">
+                                                        <li class="header_link"><?= i18n('adminpanel') ?></li>
+                                                    </a>
                     <?php endif ?>
                 </ul>
             </div>
         </header>
-        <div id="posts">
+        <section name="post">
             <?php
-            $query = "SELECT postid, postname, postcontent, postcreatedAt FROM posts WHERE postid = " . $_GET['post'];
-            $result = $mysqli->query($query);
-            $row = $result->fetch_assoc();
-            if ($result->num_rows > 0) {
-                // output data of each post
-                if (isset($_SESSION['userpsw']) && isset($_SESSION['username'])) { // if admin, the "Manage post" button appears
-                    echo "<div class=\"post\"><div class=\"post_head\"><h1 class=\"post_heading\">{$row["postname"]}</h1><p class=\"post_subheading\"> " . i18('by', 'sess') . " <b>{$blog['author']}</b> " . i18('at', 'sess') . " {$row["postcreatedAt"]}</p></div><div class=\"post_text\">{$row["postcontent"]}</div><div class=\"btns\"><a href=\"/repoxy/modules/deletePost.php?postid={$row['postid']}\"><button class=\"btn-red\">" . i18('delete', 'sess') . "</button></a></div></div>";
-                } else {
-                    echo "<div class=\"post\"><div class=\"post_head\"><h1 class=\"post_heading\">{$row["postname"]}</h1><p class=\"post_subheading\"> " . i18('by', 'sess') . " <b>{$blog['author']}</b> " . i18('at', 'sess') . " {$row["postcreatedAt"]}</p></div><div class=\"post_text\">{$row["postcontent"]}</div></div>";
-                }
+            // @TODO: try to $mysqli->bind_param() here
+            $result     = $mysqli->query("SELECT * from `posts` WHERE `postid` = " . sanitize($_GET['id']));
+            $row        = $result->fetch_assoc();
+            $blogAuthor = base64_decode($blog['author']);
+
+            // post
+            if (isset($_SESSION['userpsw']) && isset($_SESSION['username'])) { // if admin, the "Manage post" button appears
+                echo "<div class=\"post\">
+                    <div class=\"post_head\">
+                    <h1 class=\"post_heading\">{$postname}</h1>
+                    <p class=\"post_subheading\">
+                        " . i18n('by') . " <b>{$blogAuthor}</b>
+                       " . i18n('at') . " {$row["postcreated"]}</p>
+                    </div>
+                    <div class=\"post_text\">{$postcontent['full']}</div>
+                    <div class=\"btns\">
+                    <a href=\"/repoxy/modules/deletePost.php?postid={$row['postid']}&cleanOutput=true\">
+                    <button class=\"btn-red\">" . i18n('delete') . "</button></a>
+                    </div>
+                    </div>";
             } else {
-                echo "<p style=\"text-align: center;\">404</p>";
+                echo "<div class=\"post\">
+                    <div class=\"post_head\">
+                    <h1 class=\"post_heading\">{$postname}</h1>
+                    <p class=\"post_subheading\"> 
+                    " . i18n('by') . " <b>{$blogAuthor}</b> "
+                    . i18n('at') . " {$row["postcreated"]}</p>
+                    </div>
+                    <div class=\"post_text\">{$postcontent['full']}</div>
+                    </div>";
             }
 
             $mysqli->close();
             ?>
-        </div>
+        </section>
     </main>
 </body>
 

@@ -1,11 +1,13 @@
 User-agent: *
 Disallow: /repoxy/misc/
 Disallow: /repoxy/modules/
-Disallow: /repoxy/
-Disallow: /setup.php
-Disallow: /setup/
+Disallow: /repoxy/*
+Disallow: /setup/*
 Disallow: /admlogin/
 Disallow: /admpanel/
+
+User-agent: *
 Allow: /
 Allow: /about
 Allow: /contacts
+Allow: /view/*

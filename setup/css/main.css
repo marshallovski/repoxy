@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 @font-face {
@@ -32,9 +33,15 @@ main {
 
 button,
 input,
-textarea {
+textarea,
+label,
+select {
   outline: none;
   font-family: 'Roboto', sans-serif;
+}
+
+input[type="checkbox"] {
+  cursor: pointer;
 }
 
 button {
@@ -69,8 +76,10 @@ button {
 }
 
 .options {
+  display: block;
+  margin: auto;
   text-align: left;
-  margin-top: 3em;
+  width: 600px;
 }
 
 .option_heading {
@@ -84,7 +93,6 @@ textarea {
   border-radius: 5px;
   width: 200px;
   padding: 5px;
-  margin-left: 10px;
   background-color: #eee
 }
 

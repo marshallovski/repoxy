@@ -5,20 +5,31 @@ $rpxycfg = parse_ini_file("{$_SERVER['DOCUMENT_ROOT']}/repoxy/misc/repoxy.ini");
 error_reporting(E_ERROR | E_PARSE);
 session_start();
 
-// checks if admin's data is valid
+// check if admin's data is valid
 if (isset($_SESSION['userpsw']) && isset($_SESSION['username'])) {
     if (isset($_GET['postcontent']) && isset($_GET['postname'])) {
+        $postid      = rand(1, 999999); // random post ID, 6 digits (accessible via /view/?post=000000)
+        $postname    = strip_tags($_GET['postname']);
+        $postcontent = $_GET['postcontent'];
+        $postcreated = strip_tags($_GET['postcreation']);
+
         // connecting to database
         try {
-            $mysqli = new mysqli($rpxycfg['server'], $rpxycfg['user'], $rpxycfg['psw'], $rpxycfg['dbname']);
-            $stmt = $mysqli->prepare("INSERT INTO posts (postid, postname, postcontent, postcreatedAt) VALUES (?, ?, ?, ?)");
+            $mysqli = new mysqli(
+                base64_decode($rpxycfg['server']),
+                base64_decode($rpxycfg['user']),
+                base64_decode($rpxycfg['psw']),
+                base64_decode($rpxycfg['dbname'])
+            );
 
-            // send request in database
-            $stmt->bind_param("ssss", rand(1, 999999), strip_tags($_GET['postname']), strip_tags($_GET['postcontent']), strip_tags($_GET['postcreation']));
+            $stmt = $mysqli->prepare("INSERT INTO posts (postid, postname, postcontent, postcreated) VALUES (?, ?, ?, ?)");
+
+            // sending request in database
+            $stmt->bind_param("ssss", $postid, $postname, $postcontent, $postcreated);
             $stmt->execute(); // sending
-            $mysqli->close(); //  closing the connection
+            $mysqli->close();
 
-            echo sendjson(["msg" => "OK"]); // notifying client what posting is complete
+            echo sendjson(["msg" => "OK"]); // notifying client posting is complete
         } catch (\Throwable $th) { // if some error, sending to client
             http_response_code(500);
             echo sendjson(["msg" => $th->getMessage()]);
@@ -27,9 +38,9 @@ if (isset($_SESSION['userpsw']) && isset($_SESSION['username'])) {
         http_response_code(500);
         echo sendjson(["msg" => "Post content or post name is empty."]);
     }
-} else { // if not valid admin's data
+} else { // if not valid admin's data or not logined in
     http_response_code(403);
     session_unset();
     session_destroy();
-    echo sendjson(["msg" => "Not allowed."]);
+    echo sendjson(["msg" => "Not allowed"]);
 }
