@@ -8,7 +8,7 @@ Repoxy - lightweight blog engine written with **PHP+MySQL** (MariaDB supported t
 4. Deleting posts
 5. Post view
 6. Adminpanel
-7. Engine installer
+7. Repoxy installer
 8. Contacts page
 9. About page
 
