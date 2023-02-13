@@ -4,11 +4,13 @@ Repoxy - lightweight blog engine written with **PHP+MySQL** (MariaDB supported t
 # Features
 1. Adding post
 2. Editing posts
-3. Language change (Russian, Ukrainian and English (default))
+3. Many languages (Russian, Ukrainian and English)
 4. Deleting posts
 5. Post view
 6. Adminpanel
 7. Engine installer
+8. Contacts page
+9. About page
 
 # Requirements
 1. Should work on PHP 7.3+ (tested on PHP **8.1.6** and **7.3.3**) with INI, mysqli, JSON exts. (on Windows I'm recommend latest **XAMPP**)
